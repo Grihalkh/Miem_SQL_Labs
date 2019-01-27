@@ -1,53 +1,76 @@
-# THIS CODE IS NOT FINISHED. NOT ALL REFERENCES ARE WRITTEN.
-# DO NOT RUN THIS CODE AND DO NOT FILL THE DATABASE YET
-# DO NOT RUN THIS CODE AND DO NOT FILL THE DATABASE YET
-# DO NOT RUN THIS CODE AND DO NOT FILL THE DATABASE YET
-# DO NOT RUN THIS CODE AND DO NOT FILL THE DATABASE YET
-# DO NOT RUN THIS CODE AND DO NOT FILL THE DATABASE YET
-# Creating Hotel Chains table
-CREATE TABLE Chains (ID INT NOT NULL AUTO_INCREMENT,
-ChainName VARCHAR(100) NOT NULL, TypeName VARCHAR(100) NOT NULL,
-DirectorsFirstName VARCHAR(100) NOT NULL, DirectorsLastName VARCHAR(100) NOT NULL, DirectorsPatronymic VARCHAR(100) NULL,
+CREATE TABLE Countries (ID INT NOT NULL AUTO_INCREMENT,
+CountryName VARCHAR(100) NOT NULL, VisaNeededForRus VARCHAR(100) NULL,
 PRIMARY KEY (ID));
 
-# Creating Provisioners_Hotels Table (N-M connection)
-CREATE TABLE Provisioners_Hotels (ProvisionerID INT NOT NULL, HotelID INT NOT NULL);
-
-# Creating Provisioners Table
-CREATE TABLE Provisioners (ID INT NOT NULL AUTO_INCREMENT,
-ProvisionersName VARCHAR(100) NOT NULL, ProductOrService VARCHAR(100) NOT NULL,
-HotelID INT NULL,
+CREATE TABLE Cities (ID INT NOT NULL AUTO_INCREMENT,
+CityName VARCHAR(100) NOT NULL, CityStatus VARCHAR(50) NULL, # Biggest City, Capital, etc
+CountryID INT NOT NULL,
 PRIMARY KEY (ID),
-FOREIGN KEY FK_HotelID (HotelID) REFERENCES Provisioners_Hotels (HotelID));
+FOREIGN KEY FK_CountryID (CountryID) REFERENCES Countries (ID));
 
-# Creating Hotels Table
-CREATE TABLE Hotels (ID INT NOT NULL AUTO_INCREMENT, 
-HotelName VARCHAR(100) NOT NULL, Address VARCHAR(100) NOT NULL, AddressCategory VARCHAR(100) NOT NULL, # Center or Distance or Aeroport
+CREATE TABLE Chains (ID INT NOT NULL AUTO_INCREMENT,
+ChainName VARCHAR(100),
+PRIMARY KEY (ID));
+
+CREATE TABLE BonusPrograms (ID INT NOT NULL AUTO_INCREMENT,
+ProgramName VARCHAR(100) NOT NULL,
+RoomDiscount FLOAT NOT NULL, RestaurantDiscount FLOAT NULL,
+BreakfastDiscount FLOAT NULL, SPADiscount FLOAT NULL,
 ChainID INT NOT NULL,
-ArrivalTime TIME NULL, DepartureTime TIME NULL,
-Stars INT NULL, NumberOfRooms INT NOT NULL,
-RoomServiceIncluded BOOL NULL,
-FurnitureProvisionerID INT NOT NULL,
 PRIMARY KEY (ID),
-FOREIGN KEY FK_ChainID (ChainID) REFERENCES Chains (ID),
-FOREIGN KEY FK_FurnitureProvisionerID (FurnitureProvisionerID) REFERENCES Provisioners_Hotels (ProvisionerID));
+FOREIGN KEY FK_ChainID (ChainID) REFERENCES Chains (ID));
 
-# Creating Rooms table
+CREATE TABLE Hotels (ID INT NOT NULL AUTO_INCREMENT,
+HotelName VARCHAR(100) NOT NULL, Address VARCHAR (100) NOT NULL, 
+AddressCategory VARCHAR(100) NOT NULL, # Center, Distance, Aeroport
+Rating FLOAT NULL, # 0 - 10, based on Reviews
+Stars INT NULL, # NULL, 1 - 5
+ArrivalTime Time NULL, DepartureTime Time NULL,
+NumberOfRooms INT NOT NULL, NumberOfFreeRooms INT NOT NULL,
+ParkingCapacity INT NULL, # NULL or some number
+RoomServiceincluded BOOL NOT NULL, PoolIncluded BOOL NOT NULL,
+SPAIncluded BOOL NOT NULL,
+ChainID INT NOT NULL, CityID INT NOT NULL,
+PRIMARY KEY (ID),
+FOREIGN KEY FK_ChainID(ChainID) REFERENCES Chains (ID),
+FOREIGN KEY FK_CityID(CityID) REFERENCES Cities (ID));
+
 CREATE TABLE Rooms (ID INT NOT NULL AUTO_INCREMENT,
-RoomNumber INT NOT NULL, Category VARCHAR (50),
-Price FLOAT NOT NULL, Capacity INT NOT NULL,
-BedWidth INT NULL,# 120 or 140/140 or 180
-BathIncluded BOOL NULL, ShowerIncluded BOOL NULL, JacuzziIncluded BOOL NULL,
-MiniBar BOOL NULL, MiniKitchenIncluded BOOL NULL, 
-InternetIncluded BOOL NULL, TerraceIncluded BOOL NULL,
-ConnectionRoomID INT NULL,
+PricePerPerson FLOAT NOT NULL, Capacity INT NOT NULL,
+Category VARCHAR (50) NULL, # Lux, standard, double, etc
+BedWidth VARCHAR(50) NULL, # king size, queen size, basic
+ShowerIncluded BOOL NULL, BathIncluded BOOL NULL, JacuzziIncluded BOOL NULL,
+MiniBarIncluded BOOL NULL, InternetIncluded BOOL NULL,
+ConnectionRoomId INT NULL,
 HotelID INT NOT NULL,
 PRIMARY KEY (ID),
 FOREIGN KEY FK_HotelID (HotelID) REFERENCES Hotels (ID));
 
-# THIS CODE IS NOT FINISHED. NOT ALL REFERENCES ARE WRITTEN.
-# DO NOT RUN THIS CODE AND DO NOT FILL THE DATABASE YET
-# DO NOT RUN THIS CODE AND DO NOT FILL THE DATABASE YET
-# DO NOT RUN THIS CODE AND DO NOT FILL THE DATABASE YET
-# DO NOT RUN THIS CODE AND DO NOT FILL THE DATABASE YET
-# DO NOT RUN THIS CODE AND DO NOT FILL THE DATABASE YET
+CREATE TABLE Reviews (UserNickName VARCHAR (100) NOT NULL,
+ReviewText TEXT, Rating FLOAT NOT NULL,
+HotelID INT NOT NULL,
+FOREIGN KEY FK_HotelID (HotelID) REFERENCES Hotels (ID));
+
+CREATE TABLE Aeroports (AeroportCode VARCHAR(3) NOT NULL,
+AeroportName VARCHAR(100) NOT NULL, 
+CityID INT NOT NULL,
+PRIMARY KEY (AeroportCode),
+FOREIGN KEY FK_CityID (CityID) REFERENCES Cities (ID));
+
+# This table is for N-M Connection
+CREATE TABLE Aeroports_Hotels (AeroportCode VARCHAR(3) NOT NULL, HotelID INT NOT NULL,
+Distance FLOAT NOT NULL,
+FOREIGN KEY FK_AeroportCode (AeroportCode) REFERENCES Aeroports (AeroportCode),
+FOREIGN KEY FK_HotelID (HotelID) REFERENCES Hotels (ID));
+
+CREATE TABLE Sightseeings (ID INT NOT NULL AUTO_INCREMENT,
+SightName VARCHAR(100) NOT NULL, 
+CityID INT NOT NULL,
+PRIMARY KEY (ID),
+FOREIGN KEY FK_CityID (CityID) REFERENCES Cities (ID));
+
+# This table is for N-M Connection
+CREATE TABLE Sightseeings_Hotels (SightID INT NOT NULL, HotelID INT NOT NULL,
+Distance FLOAT NOT NULL,
+FOREIGN KEY FK_SightID (SightID) REFERENCES Sightseeings (ID),
+FOREIGN KEY FK_HotelID (HotelID) REFERENCES Hotels (ID));
