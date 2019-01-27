@@ -6,7 +6,7 @@ CREATE TABLE Cities (ID INT NOT NULL AUTO_INCREMENT,
 CityName VARCHAR(100) NOT NULL, CityStatus VARCHAR(50) NULL, # Biggest City, Capital, etc
 CountryID INT NOT NULL,
 PRIMARY KEY (ID),
-FOREIGN KEY FK_CountryID (CountryID) REFERENCES Countries (ID));
+FOREIGN KEY FK_Cities_CountryID (CountryID) REFERENCES Countries (ID));
 
 CREATE TABLE Chains (ID INT NOT NULL AUTO_INCREMENT,
 ChainName VARCHAR(100),
@@ -18,7 +18,7 @@ RoomDiscount FLOAT NOT NULL, RestaurantDiscount FLOAT NULL,
 BreakfastDiscount FLOAT NULL, SPADiscount FLOAT NULL,
 ChainID INT NOT NULL,
 PRIMARY KEY (ID),
-FOREIGN KEY FK_ChainID (ChainID) REFERENCES Chains (ID));
+FOREIGN KEY FK_BonusPrograms_ChainID (ChainID) REFERENCES Chains (ID));
 
 CREATE TABLE Hotels (ID INT NOT NULL AUTO_INCREMENT,
 HotelName VARCHAR(100) NOT NULL, Address VARCHAR (100) NOT NULL, 
@@ -32,8 +32,8 @@ RoomServiceincluded BOOL NOT NULL, PoolIncluded BOOL NOT NULL,
 SPAIncluded BOOL NOT NULL,
 ChainID INT NOT NULL, CityID INT NOT NULL,
 PRIMARY KEY (ID),
-FOREIGN KEY FK_ChainID(ChainID) REFERENCES Chains (ID),
-FOREIGN KEY FK_CityID(CityID) REFERENCES Cities (ID));
+FOREIGN KEY FK_Hotels_ChainID (ChainID) REFERENCES Chains (ID),
+FOREIGN KEY FK_Hotels_CityID (CityID) REFERENCES Cities (ID));
 
 CREATE TABLE Rooms (ID INT NOT NULL AUTO_INCREMENT,
 PricePerPerson FLOAT NOT NULL, Capacity INT NOT NULL,
@@ -44,33 +44,33 @@ MiniBarIncluded BOOL NULL, InternetIncluded BOOL NULL,
 ConnectionRoomId INT NULL,
 HotelID INT NOT NULL,
 PRIMARY KEY (ID),
-FOREIGN KEY FK_HotelID (HotelID) REFERENCES Hotels (ID));
+FOREIGN KEY FK_Rooms_HotelID (HotelID) REFERENCES Hotels (ID));
 
 CREATE TABLE Reviews (UserNickName VARCHAR (100) NOT NULL,
 ReviewText TEXT, Rating FLOAT NOT NULL,
 HotelID INT NOT NULL,
-FOREIGN KEY FK_HotelID (HotelID) REFERENCES Hotels (ID));
+FOREIGN KEY FK_Reviews_HotelID (HotelID) REFERENCES Hotels (ID));
 
 CREATE TABLE Aeroports (AeroportCode VARCHAR(3) NOT NULL,
 AeroportName VARCHAR(100) NOT NULL, 
 CityID INT NOT NULL,
 PRIMARY KEY (AeroportCode),
-FOREIGN KEY FK_CityID (CityID) REFERENCES Cities (ID));
+FOREIGN KEY FK_Aeroports_CityID (CityID) REFERENCES Cities (ID));
 
 # This table is for N-M Connection
 CREATE TABLE Aeroports_Hotels (AeroportCode VARCHAR(3) NOT NULL, HotelID INT NOT NULL,
 Distance FLOAT NOT NULL,
-FOREIGN KEY FK_AeroportCode (AeroportCode) REFERENCES Aeroports (AeroportCode),
-FOREIGN KEY FK_HotelID (HotelID) REFERENCES Hotels (ID));
+FOREIGN KEY FK_AH_AeroportCode (AeroportCode) REFERENCES Aeroports (AeroportCode),
+FOREIGN KEY FK_AH_HotelID (HotelID) REFERENCES Hotels (ID));
 
 CREATE TABLE Sightseeings (ID INT NOT NULL AUTO_INCREMENT,
 SightName VARCHAR(100) NOT NULL, 
 CityID INT NOT NULL,
 PRIMARY KEY (ID),
-FOREIGN KEY FK_CityID (CityID) REFERENCES Cities (ID));
+FOREIGN KEY FK_Sightseeings_CityID (CityID) REFERENCES Cities (ID));
 
 # This table is for N-M Connection
 CREATE TABLE Sightseeings_Hotels (SightID INT NOT NULL, HotelID INT NOT NULL,
 Distance FLOAT NOT NULL,
-FOREIGN KEY FK_SightID (SightID) REFERENCES Sightseeings (ID),
-FOREIGN KEY FK_HotelID (HotelID) REFERENCES Hotels (ID));
+FOREIGN KEY FK_SH_SightID (SightID) REFERENCES Sightseeings (ID),
+FOREIGN KEY FK_SH_HotelID (HotelID) REFERENCES Hotels (ID));
