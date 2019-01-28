@@ -31,6 +31,8 @@ ParkingCapacity INT NULL, # NULL or some number
 RoomServiceincluded BOOL NOT NULL, PoolIncluded BOOL NOT NULL,
 SPAIncluded BOOL NOT NULL,
 ChainID INT NOT NULL, CityID INT NOT NULL,
+PhoneNumber VARCHAR (20) NOT NULL,
+Email VARCHAR(50) NOT NULL,
 PRIMARY KEY (ID),
 FOREIGN KEY FK_Hotels_ChainID (ChainID) REFERENCES Chains (ID),
 FOREIGN KEY FK_Hotels_CityID (CityID) REFERENCES Cities (ID));
